@@ -7,7 +7,7 @@ extern int NO;
 
 struct distance_table 
 {
-  int costs[4][4];
+  int costs[4][4]; // [scorce node][destiantions node]
 } dt0;
 
 
@@ -15,20 +15,37 @@ struct distance_table
 
 void rtinit0() 
 {
+  dt0.costs[0][1] = 1;
+  dt0.costs[1][0] = 1;
 
+  dt0.costs[0][2] = 3;
+  dt0.costs[2][0] = 3;
+
+  dt0.costs[0][3] = 7;
+  dt0.costs[3][0] = 7;
+
+
+  struct rtpkt packet;
+
+  // vet inte om loop behövs.. 
+  for (int i = 1; i < 4; i++)
+  {
+    packet.destid = i;
+    packet.mincost[i] = dt0.costs[0][i];
+  }
+  
+  tolayer2(packet);
+  
 }
-
 
 void rtupdate0(struct rtpkt *rcvdpkt)
-  
 {
+  // ska använda djikstra algoritm 
 
 }
 
 
-void printdt0(struct distance_table *dtptr)
-
-  
+void printdt0(struct distance_table *dtptr)  
 {
   printf("                via     \n");
   printf("   D0 |    1     2    3 \n");

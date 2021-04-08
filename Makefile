@@ -7,7 +7,7 @@ all: main
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $^
 
-main: prog3.o node0.c node1.c node2.c node3.c
+main: node0.o node1.o node2.o node3.o prog3.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean: #make clean to run

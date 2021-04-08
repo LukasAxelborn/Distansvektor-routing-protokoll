@@ -6,7 +6,7 @@ extern int NO;
 
 struct distance_table
 {
-  int costs[4][4]; // [destiantions node][via node]
+  int costs[4][4]; // [des node][via node]
 } dt0;
 
 void sendpackets()
@@ -51,15 +51,14 @@ void rtinit0()
 
 void rtupdate0(struct rtpkt *rcvdpkt)
 {
-  // ska använda djikstra algoritm
 
-  const int via = rcvdpkt->sourceid;
+  int via = rcvdpkt->sourceid;
 
-  for (int destination = 0; destination < 4; destination++)
+  for (int des = 0; des < 4; des++)
   {
-    if (dt0.costs[destination][via] > dt0.costs[via][via] + rcvdpkt->mincost[destination])
+    if (dt0.costs[des][via] > dt0.costs[via][via] + rcvdpkt->mincost[des])
     {
-      dt0.costs[destination][via] = dt0.costs[via][via] + rcvdpkt->mincost[destination];
+      dt0.costs[des][via] = dt0.costs[via][via] + rcvdpkt->mincost[des];
 
       sendpackets();
     }

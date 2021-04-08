@@ -6,31 +6,18 @@ extern int NO;
 
 struct distance_table
 {
-  int costs[4][4]; // [scorce node][destiantions node]
+  int costs[4][4]; // [destiantions node][via node]
 } dt0;
 
-/* students to write the following two routines, and maybe some others */
-
-void rtinit0()
+void sendpackets()
 {
-  dt0.costs[0][0] = 0;
-
-  dt0.costs[0][1] = 1;
-  dt0.costs[1][0] = 1;
-
-  dt0.costs[0][2] = 3;
-  dt0.costs[2][0] = 3;
-
-  dt0.costs[0][3] = 7;
-  dt0.costs[3][0] = 7;
-
   struct rtpkt packet;
 
   packet.sourceid = 0;
 
   for (int i = 1; i < 4; i++)
   {
-    packet.mincost[i] = dt0.costs[0][i];
+    packet.mincost[i] = dt0.costs[i][i];
   }
   packet.destid = 1;
   tolayer2(packet);
@@ -42,9 +29,41 @@ void rtinit0()
   tolayer2(packet);
 }
 
+/* students to write the following two routines, and maybe some others */
+
+void rtinit0()
+{
+  for (int i = 0; i < 4; i++)
+  {
+    for (int j = 0; j < 4; j++)
+    {
+      dt0.costs[i][j] = 999;
+    }
+  }
+
+  dt0.costs[0][0] = 0;
+  dt0.costs[1][1] = 1;
+  dt0.costs[2][2] = 3;
+  dt0.costs[3][3] = 7;
+
+  sendpackets();
+}
+
 void rtupdate0(struct rtpkt *rcvdpkt)
 {
   // ska använda djikstra algoritm
+
+  const int via = rcvdpkt->sourceid;
+
+  for (int destination = 0; destination < 4; destination++)
+  {
+    if (dt0.costs[destination][via] > dt0.costs[via][via] + rcvdpkt->mincost[destination])
+    {
+      dt0.costs[destination][via] = dt0.costs[via][via] + rcvdpkt->mincost[destination];
+
+      sendpackets();
+    }
+  }
 }
 
 void printdt0(struct distance_table *dtptr)

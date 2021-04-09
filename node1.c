@@ -9,7 +9,7 @@ struct distance_table
   int costs[4][4];
 } dt1;
 
-void sendpackets()
+void sendpackets1()
 {
   struct rtpkt packet = {1, 0, 999, 999, 999, 999};
 
@@ -24,13 +24,10 @@ void sendpackets()
     }
   }
 
-  packet.destid = 1;
+  packet.destid = 0;
   tolayer2(packet);
 
   packet.destid = 2;
-  tolayer2(packet);
-
-  packet.destid = 3;
   tolayer2(packet);
 }
 
@@ -50,7 +47,7 @@ void rtinit1()
   dt1.costs[1][1] = 0;
   dt1.costs[2][2] = 1;
 
-  sendpackets();
+  sendpackets1();
 }
 
 void rtupdate1(struct rtpkt *rcvdpkt)
@@ -64,7 +61,7 @@ void rtupdate1(struct rtpkt *rcvdpkt)
     {
       dt1.costs[des][via] = dt1.costs[via][via] + rcvdpkt->mincost[des];
 
-      sendpackets();
+      sendpackets1();
     }
   }
 }

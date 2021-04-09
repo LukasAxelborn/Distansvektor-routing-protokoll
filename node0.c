@@ -11,14 +11,19 @@ struct distance_table
 
 void sendpackets()
 {
-  struct rtpkt packet;
+  struct rtpkt packet = {0, 0, 999, 999, 999, 999};
 
-  packet.sourceid = 0;
-
-  for (int i = 1; i < 4; i++)
+  for (int des = 0; des < 4; des++)
   {
-    packet.mincost[i] = dt0.costs[i][i];
+    for (int via = 0; via < 4; via++)
+    {
+      if (dt0.costs[des][via] < packet.mincost[des])
+      {
+        packet.mincost[des] = dt0.costs[des][via];
+      }
+    }
   }
+
   packet.destid = 1;
   tolayer2(packet);
 
